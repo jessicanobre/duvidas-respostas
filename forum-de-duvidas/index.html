@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum de Dúvidas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Forum de Dúvidas</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#postQuestion">Postar Dúvida</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1 class="text-center">Forum de Dúvidas</h1>
+        <p class="text-center">Poste suas dúvidas e ajude a comunidade com suas respostas.</p>
+
+        <!-- Seção para postar dúvidas -->
+        <section id="postQuestion" class="mt-5">
+            <h2>Postar Dúvida</h2>
+            <form id="questionForm">
+                <div class="mb-3">
+                    <label for="questionTitle" class="form-label">Título</label>
+                    <input type="text" class="form-control" id="questionTitle" required>
+                </div>
+                <div class="mb-3">
+                    <label for="questionBody" class="form-label">Descrição</label>
+                    <textarea class="form-control" id="questionBody" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Postar</button>
+            </form>
+        </section>
+
+        <!-- Seção para listar dúvidas -->
+        <section id="questionsList" class="mt-5">
+            <h2>Dúvidas Recentes</h2>
+            <div id="questionsContainer" class="list-group">
+                <!-- As dúvidas aparecerão aqui -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Referências aos elementos HTML
+        const questionForm = document.getElementById('questionForm');
+        const questionsContainer = document.getElementById('questionsContainer');
+
+        // Adicionar evento para submissão do formulário
+        questionForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Capturar valores dos campos
+            const title = document.getElementById('questionTitle').value;
+            const body = document.getElementById('questionBody').value;
+
+            // Criar card para a nova dúvida
+            const questionCard = document.createElement('div');
+            questionCard.className = 'list-group-item';
+            questionCard.innerHTML = `
+                <h5>${title}</h5>
+                <p>${body}</p>
+                <button class="btn btn-link text-primary reply-btn">Responder</button>
+                <div class="reply-container mt-3" style="display: none;">
+                    <textarea class="form-control mb-2" rows="2" placeholder="Digite sua resposta"></textarea>
+                    <button class="btn btn-success submit-reply">Enviar Resposta</button>
+                </div>
+                <div class="replies mt-3">
+                    <!-- Respostas aparecerão aqui -->
+                </div>
+            `;
+
+            // Adicionar interatividade para respostas
+            questionCard.querySelector('.reply-btn').addEventListener('click', function() {
+                const replyContainer = questionCard.querySelector('.reply-container');
+                replyContainer.style.display = replyContainer.style.display === 'none' ? 'block' : 'none';
+            });
+
+            questionCard.querySelector('.submit-reply').addEventListener('click', function() {
+                const replyText = questionCard.querySelector('.reply-container textarea').value;
+                if (replyText) {
+                    const replyElement = document.createElement('p');
+                    replyElement.textContent = replyText;
+                    replyElement.className = 'border p-2 mt-2';
+                    questionCard.querySelector('.replies').appendChild(replyElement);
+                    questionCard.querySelector('.reply-container textarea').value = '';
+                }
+            });
+
+            // Adicionar ao container de dúvidas
+            questionsContainer.appendChild(questionCard);
+
+            // Limpar formulário
+            questionForm.reset();
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
